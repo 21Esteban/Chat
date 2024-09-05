@@ -6,13 +6,13 @@ export const SideBar = () => {
     <>
       <aside
         id="default-sidebar"
-        className="fixed top-0 left-0 z-40 w-[28%] h-screen transition-transform -translate-x-full sm:translate-x-0"
+        className=" w-full h-screen transition-transform -translate-x-full sm:translate-x-0"
         aria-label="Sidebar"
       >
-        <div className="h-full overflow-y-auto bg-gray-50 dark:bg-gray-800">
-          <div className="w-full max-w-md bg-white sm:p-6 dark:bg-gray-800 dark:border-gray-700">
+        <div className="h-full overflow-y-auto bg-gray-50 ">
+          <div className="w-full max-w-md bg-gray-50 sm:p-6  ">
             <div className="flex items-center justify-between mb-4">
-              <h5 className="text-xl font-bold leading-none text-gray-900 dark:text-white">
+              <h5 className="text-xl font-bold leading-none text-gray-900 ">
                 Chats
               </h5>
               <svg
