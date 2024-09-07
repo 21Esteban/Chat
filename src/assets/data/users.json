@@ -1,59 +1,65 @@
 [
-    {
+    {"id":1,
       "imgProfile": "https://randomuser.me/api/portraits/men/1.jpg",
       "name": "Juan Esteban",
       "lastMsg": "Hola, ¿cómo estás?",
       "numMessage": 2
     },
     {
+      "id":2,
       "imgProfile": "https://randomuser.me/api/portraits/women/2.jpg",
       "name": "María Fernanda",
       "lastMsg": "Nos vemos mañana",
       "numMessage": 5
     },
-    {
+    {"id":3,
       "imgProfile": "https://randomuser.me/api/portraits/men/3.jpg",
       "name": "Carlos Alberto",
       "lastMsg": "No olvides la reunión",
       "numMessage": 1
     },
     {
+      "id":4,
       "imgProfile": "https://randomuser.me/api/portraits/women/4.jpg",
       "name": "Laura Jiménez",
       "lastMsg": "Estoy llegando",
       "numMessage": 3
     },
     {
+      "id":5,
       "imgProfile": "https://randomuser.me/api/portraits/men/5.jpg",
       "name": "Ricardo Pérez",
       "lastMsg": "Voy tarde",
       "numMessage": 0
     },
     {
+      "id":6,
       "imgProfile": "https://randomuser.me/api/portraits/women/6.jpg",
       "name": "Ana Sofía",
       "lastMsg": "¡Gracias!",
       "numMessage": 4
     },
     {
+      "id":7,
       "imgProfile": "https://randomuser.me/api/portraits/men/7.jpg",
       "name": "Diego Martínez",
       "lastMsg": "Hablemos más tarde",
       "numMessage": 1
     },
-    {
+    {"id":8,
       "imgProfile": "https://randomuser.me/api/portraits/women/8.jpg",
       "name": "Sofía González",
       "lastMsg": "Perfecto, hasta luego",
       "numMessage": 6
     },
-    {
+    {"id":9,
       "imgProfile": "https://randomuser.me/api/portraits/men/9.jpg",
       "name": "Mateo García",
       "lastMsg": "¿Dónde estás?",
       "numMessage": 2
     },
     {
+      "id":10,
       "imgProfile": "https://randomuser.me/api/portraits/women/10.jpg",
       "name": "Paula Díaz",
       "lastMsg": "Listo, ya lo envié",

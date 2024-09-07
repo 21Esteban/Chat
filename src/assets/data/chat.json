@@ -1,0 +1,60 @@
+{
+    "chats": [
+      {
+        "id": 1,
+        "name": "Juan Esteban",
+        "imgProfile": "https://randomuser.me/api/portraits/men/1.jpg",
+        "lastMsg": "Hola, ¿cómo estás?",
+        "numMessage": 2,
+        "messages": [
+          {
+            "id": 101,
+            "name": "Juan Esteban",
+            "lastHour": "11:30 AM",
+            "message": "Hola, ¿cómo estás?",
+            "isCurrentUser": true
+          },
+          {
+            "id": 102,
+            "name": "camilo",
+            "lastHour": "11:31 AM",
+            "message": "Bien, ¿y tú?",
+            "isCurrentUser": false
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "name": "María",
+        "imgProfile": "https://randomuser.me/api/portraits/women/4.jpg",
+        "lastMsg": "¿Vamos al cine?",
+        "numMessage": 1,
+        "messages": [
+          {
+            "id": 201,
+            "name": "María",
+            "lastHour": "10:00 AM",
+            "message": "¿Vamos al cine?",
+            "isCurrentUser": false
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "name": "Carlos",
+        "imgProfile": "https://randomuser.me/api/portraits/women/8.jpg",        
+        "lastMsg": "Ya envié los archivos",
+        "numMessage": 0,
+        "messages": [
+          {
+            "id": 301,
+            "name": "Carlos",
+            "lastHour": "09:15 AM",
+            "message": "Ya envié los archivos",
+            "isCurrentUser": false
+          }
+        ]
+      }
+    ]
+  }
+  
