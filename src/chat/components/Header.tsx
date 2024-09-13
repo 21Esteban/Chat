@@ -7,7 +7,7 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({userName,imgProfile}) => {
   return (
     <>
-      <div className="flex items-center h-16 pl-6 bg-slate-200">
+      <div className="flex items-center h-16 pl-6 p-10 bg-gray-100 border-b-2">
         <div className="flex-shrink-0">
           <img
             className="w-8 h-8 rounded-full"

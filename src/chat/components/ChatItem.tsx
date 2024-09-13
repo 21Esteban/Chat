@@ -1,7 +1,6 @@
-import React from 'react';
+import React from "react";
 
 interface ChatItemProps {
-  imgProfile: string;
   name: string;
   lastMsg: string;
   numMessage: number;
@@ -9,38 +8,29 @@ interface ChatItemProps {
   isSelected: boolean;
 }
 
-export const ChatItem: React.FC<ChatItemProps> = ({ imgProfile, name, lastMsg, numMessage, onSelectChat, isSelected }) => {
+export const ChatItem: React.FC<ChatItemProps> = ({
+  name,
+  lastMsg,
+  numMessage,
+  onSelectChat,
+  isSelected,
+}) => {
   const handleClick = () => {
     onSelectChat();
   };
 
   return (
-    <li
-      className={`py-3 px-4 sm:py-4 rounded-lg cursor-pointer ${isSelected ? 'bg-blue-200' : 'hover:bg-slate-200'}`}
-      onClick={handleClick}
-    >
-      <div className="flex items-center">
-        <div className="flex-shrink-0">
-          <img
-            className="w-8 h-8 rounded-full"
-            src={imgProfile}
-            alt="user Image"
-          />
+    <button className={`rounded-xl p-2 ${isSelected ? 'bg-gray-100' : 'hover:bg-gray-100'}`} onClick={handleClick}>
+      <div className="flex flex-row items-center">
+        <div className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full">
+          {name[0]}
         </div>
-        <div className="flex-1 min-w-0 ms-4">
-          <p className="text-sm font-bold text-blue-500 truncate">
-            {name}
-          </p>
-          <p className="text-sm text-gray-500 truncate">
-            {lastMsg}
-          </p>
-        </div>
-        <div className="font-semibold bg-green-600 rounded-full text-white w-4 h-4 flex justify-center items-center">
-          <span className="text-xs">
-            {numMessage}
-          </span>
+        <div className="ml-2 text-sm font-semibold">{name}</div>
+        <div className="flex items-center justify-center ml-auto text-xs text-white bg-red-500 h-4 w-4 rounded leading-none">
+          {numMessage}
         </div>
       </div>
-    </li>
+        <div className="text-sm ml-2 mt-1 font-thin text-start">{lastMsg}</div>
+    </button>
   );
 };
