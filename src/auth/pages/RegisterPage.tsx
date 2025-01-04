@@ -1,204 +1,156 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Link, useNavigate } from "react-router-dom";
 import { AuthLayout } from "../layout/AuthLayout";
+import { Button } from "@/components/ui/button";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  Form,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import customAxios from "@/utils/customAxios";
 import { useState } from "react";
-import customAxios from "../../utils/customAxios";
-import { ToastContainer, toast } from "react-toastify";
 
-interface RegisterData {
-  userName: string;
-  email: string;
-  number: string;
-  password: string;
-  confirmPassword: string;
-}
-
-const initialData: RegisterData = {
-  userName: "",
-  email: "",
-  number: "",
-  password: "",
-  confirmPassword: "",
-};
+const formSchema = z
+  .object({
+    userName: z
+      .string()
+      .min(3, { message: "Username must be at least 3 characters long" }),
+    email: z.string().email({ message: "Invalid email format" }),
+    number: z
+      .string()
+      .min(10, { message: "Phone number must be at least 10 characters long" }),
+    password: z
+      .string()
+      .min(6, { message: "Password must be at least 6 characters long" }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 export const RegisterPage = () => {
-  const [formData, setFormData] = useState<RegisterData>(initialData);
-  const navigate = useNavigate(); // Hook para redirigir
+  const [backMessage, setBackMessage ] = useState("");
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      userName: "",
+      email: "",
+      number: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
 
-  const sendForm = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const navigate = useNavigate();
+
+  const sendForm = async (values: z.infer<typeof formSchema>) => {
     try {
-      // Validaciones
-      if (
-        !formData.userName ||
-        !formData.email ||
-        !formData.number ||
-        !formData.password ||
-        !formData.confirmPassword
-      ) {
-        return toast("All fields are required");
-      }
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(formData.email)) {
-        return toast("Invalid email format");
-      }
-
-      if (formData.password !== formData.confirmPassword) {
-        return toast("Passwords do not match");
-      }
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const {confirmPassword, ...data} = formData;
-      const response = await customAxios.post("/auth/register", data);
+      const { confirmPassword, ...rest } = values;
+      const response = await customAxios.post("/auth/register", rest);
       localStorage.setItem("token", response.data.token);
-      toast(response.data.message,{
-        onClose: () => navigate("/"),
-      });
-
-    } catch (error) { 
+      navigate("/");
+    } catch (error:any) {
       console.log(error);
+      setBackMessage(error.response.data.message);
     }
   };
 
   return (
     <AuthLayout title="Register">
-      <div className="w-full h-[36rem]">
+      <Form {...form}>
         <form
-          className="bg-white shadow-lg rounded-3xl px-8 pt-6 pb-8 h-full"
-          onSubmit={sendForm}
+          onSubmit={form.handleSubmit(sendForm)}
+          className="space-y-4 w-[80%] rounded-3xl md:w-[50%] lg:w-[40%] xl:w-[20%]"
         >
-          <div className=" space-y-2">
-            <label
-              className="block text-gray-700 text-sm font-bold "
-              htmlFor="userName"
-            >
-              userName
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="userName"
-              type="text"
-              placeholder="userName"
-              value={formData.userName}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setFormData((prevValue: RegisterData) => ({
-                  ...prevValue,
-                  userName: e.target.value,
-                }));
-              }}
-            />
-          </div>
-          <div className="mb-4 mt-4 space-y-2">
-            <label
-              className="block text-gray-700 text-sm font-bold "
-              htmlFor="email"
-            >
-              Email
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="email"
-              type="text"
-              placeholder="example@gmail.com"
-              value={formData.email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setFormData((prevValue: RegisterData) => ({
-                  ...prevValue,
-                  email: e.target.value,
-                }));
-              }}
-            />
-          </div>
-          <div className="mb-4 mt-4 space-y-2">
-            <label
-              className="block text-gray-700 text-sm font-bold "
-              htmlFor="phone"
-            >
-              phone number
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="phone"
-              type="number"
-              placeholder="1234567890"
-              value={formData.number}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setFormData((prevValue: RegisterData) => ({
-                  ...prevValue,
-                  number: e.target.value,
-                }));
-              }}
-            />
-          </div>
-          <div className="space-y-2">
-            <label
-              className="block text-gray-700 text-sm font-bold "
-              htmlFor="password"
-            >
-              Password
-            </label>
-            <input
-              className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700  leading-tight focus:outline-none focus:shadow-outline"
-              id="password"
-              type="password"
-              placeholder="******************"
-              value={formData.password}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setFormData((prevValue: RegisterData) => ({
-                  ...prevValue,
-                  password: e.target.value,
-                }));
-              }}
-            />
-          </div>
-          <div className="space-y-2 mt-2">
-            <label
-              className="block text-gray-700 text-sm font-bold "
-              htmlFor="ConfirmPassword"
-            >
-              Confirm Password
-            </label>
-            <input
-              className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="ConfirmPassword"
-              type="password"
-              placeholder="******************"
-              value={formData.confirmPassword}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setFormData((prevValue: RegisterData) => ({
-                  ...prevValue,
-                  confirmPassword: e.target.value,
-                }));
-              }}
-            />
-          </div>
-          <div className="flex justify-between space-y-2 mt-2">
+          <FormField
+            control={form.control}
+            name="userName"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>username</FormLabel>
+                <FormControl>
+                  <Input placeholder="Jhon doe" {...field} type="text" />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="youremail@gmail.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="number"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Phone number</FormLabel>
+                <FormControl>
+                  <Input type="text" placeholder="3020323400" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>password</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="Password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Confirm Password</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="Password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" className="w-full">
+            Submit
+          </Button>
+          <p className="text-sm font-medium text-destructive text-center">{backMessage}</p>
+          <div className="text-center mt-4 text-sm text-zinc-50">
+            ¿Dont have an account?{" "}
             <Link
-              color="inherit"
               to="/auth/login"
-              className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 "
+              className=" text-blue-400 hover:underline font-medium"
             >
-              you have an account?
+              Login
             </Link>
           </div>
-          <ToastContainer
-            position="top-center"
-            pauseOnHover={false}
-            theme="dark"
-            autoClose={1500}
-          />
-          <div className="flex justify-center ">
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="submit"
-            >
-              Register
-            </button>
-          </div>
         </form>
-        <p className="text-center text-gray-500 text-xs">
-          &copy;2024 JlCoders. All rights reserved.
-        </p>
-      </div>
+      </Form>
     </AuthLayout>
   );
 };

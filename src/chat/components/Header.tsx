@@ -1,27 +1,20 @@
-
 interface HeaderProps {
   userName: string;
-  imgProfile:string
+  imgProfile: string;
 }
 
-export const Header: React.FC<HeaderProps> = ({userName,imgProfile}) => {
+export const Header: React.FC<HeaderProps> = ({ userName, imgProfile }) => {
   return (
-    <>
-      <div className="flex items-center h-16 pl-6 p-10 bg-gray-100 border-b-2">
-        <div className="flex-shrink-0">
-          <img
-            className="w-8 h-8 rounded-full"
-            src={imgProfile}
-            alt="user Image"
-          />
-        </div>
-        <div className="flex-1 min-w-0 ms-4">
-          <p className="text-sm font-bold text-blue-500 truncate ">
-            {userName}
-          </p>
-          <p className="text-sm text-gray-500 truncate ">Contact Info</p>
-        </div>
+    <header className="flex items-center h-[81px] px-6 bg-card border-b border-border shadow-sm">
+      <img
+        className="w-10 h-10 rounded-full object-cover"
+        src={imgProfile}
+        alt="User Profile"
+      />
+      <div className="ml-4 min-w-0">
+        <p className="text-sm font-medium text-primary truncate">{userName}</p>
+        <p className="text-xs text-muted-foreground truncate">Contact Info</p>
       </div>
-    </>
+    </header>
   );
 };

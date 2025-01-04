@@ -1,99 +1,93 @@
-import { Link } from "react-router-dom";
 import { AuthLayout } from "../layout/AuthLayout";
-import { useState } from "react";
 import customAxios from "../../utils/customAxios";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
-interface FormData {
-  email: string;
-  password: string;
-}
-
-const initialData: FormData = {
-  email: "",
-  password: "",
-};
+const formSchema = z.object({
+  email: z.string().email({ message: "Invalid email format" }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters long" }),
+});
 
 export const LoginPage = () => {
-  const [formData, setFormData] = useState<FormData>(initialData);
-
-  const sendForm = async (e: React.FormEvent<HTMLFormElement>) => {
-   e.preventDefault();
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+  const sendForm = async (values: z.infer<typeof formSchema>) => {
     try {
-      const respuesta = await customAxios.post("/auth/signIn", formData)
-      console.log(respuesta);
+      const response = await customAxios.post("/auth/signIn", values);
+      localStorage.setItem("token", response.data.token);
+      
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   return (
-    <AuthLayout title="Login">
-      <div className="w-full max-w-3xl h-[36rem]">
-        <form className="bg-white shadow-lg rounded-3xl px-6 pt-6 pb-8 mb-4 h-full flex flex-col justify-center items-center" onSubmit={sendForm}>
-          <div className="mb-4 mt-4 w-80 space-y-2">
-            <label
-              className="block text-gray-700 text-sm font-bold"
-              htmlFor="email"
-            >
-              email
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="email"
-              type="email"
-              placeholder="email"
-              value={formData.email}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                setFormData((prevValue: FormData) => ({
-                  ...prevValue,
-                  email: e.target.value,
-                }));
-              }}
-            />
-          </div>
-          <div className="w-80 space-y-2">
-            <label
-              className="block text-gray-700 text-sm font-bold "
-              htmlFor="password"
-            >
-              Password
-            </label>
-            <input
-              className="shadow appearance-none border border-red-500 rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              id="password"
-              type="password"
-              placeholder="******************"
-              value={formData.password}
-              onChange={(e:React.ChangeEvent<HTMLInputElement>)=>{
-                setFormData((prevValue:FormData)=>({
-                  ...prevValue,
-                  password:e.target.value
-                }))
-              }}
-            />
-          </div>
-          <div className="flex justify-between mt-4">
+    <AuthLayout title="Login in">
+      <Form {...form}>
+        <form
+          onSubmit={form.handleSubmit(sendForm)}
+          className="space-y-4 w-[80%] rounded-3xl md:w-[50%] lg:w-[40%] xl:w-[20%]"
+        >
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input placeholder="youremail@gmail.com" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>password</FormLabel>
+                <FormControl>
+                  <Input type="password" placeholder="Password" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" className="w-full">
+            Submit
+          </Button>
+          <div className="text-center mt-4 text-sm text-zinc-50">
+            ¿Dont have an account?{" "}
             <Link
-              color="inherit"
               to="/auth/register"
-              className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800 mb-8"
+              className=" text-blue-400 hover:underline font-medium"
             >
-              Don't have an Account?
+              Register
             </Link>
           </div>
-          <div className="flex justify-center ">
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              type="submit"
-            >
-              Sign In
-            </button>
-          </div>
         </form>
-        <p className="text-center text-gray-500 text-xs">
-          &copy;2024 JlCoders. All rights reserved.
-        </p>
-      </div>
+      </Form>
     </AuthLayout>
   );
 };
