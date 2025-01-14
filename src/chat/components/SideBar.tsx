@@ -27,6 +27,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router";
 
 interface Chat {
   id: number;
@@ -64,6 +73,8 @@ const formSchema = z.object({
 });
 
 export const SideBar = () => {
+  const navigate = useNavigate();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -88,9 +99,19 @@ export const SideBar = () => {
       {/* Encabezado */}
       <div className="flex items-center justify-between p-4 border-b border-border">
         <h1 className="text-lg font-semibold">Chats</h1>
-        <Button variant="ghost" size="icon" aria-label="Settings">
-          <Settings className="w-5 h-5" />
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Settings className="w-5 h-5" />
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>Options</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={()=>{
+              localStorage.removeItem("token")
+              navigate("auth/login")
+              }}>Sign out</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Barra de búsqueda */}

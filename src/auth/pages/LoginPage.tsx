@@ -14,6 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   email: z.string().email({ message: "Invalid email format" }),
@@ -23,6 +24,7 @@ const formSchema = z.object({
 });
 
 export const LoginPage = () => {
+  const navigate = useNavigate();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,8 +35,10 @@ export const LoginPage = () => {
   const sendForm = async (values: z.infer<typeof formSchema>) => {
     try {
       const response = await customAxios.post("/auth/signIn", values);
-      localStorage.setItem("token", response.data.token);
-      
+      if(response.data.token){
+        localStorage.setItem("token", response.data.token);
+        navigate("/");
+      } 
     } catch (error) {
       console.log(error);
     }

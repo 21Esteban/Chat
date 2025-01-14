@@ -56,8 +56,10 @@ export const RegisterPage = () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { confirmPassword, ...rest } = values;
       const response = await customAxios.post("/auth/register", rest);
-      localStorage.setItem("token", response.data.token);
-      navigate("/");
+      if(response.data.token){
+        localStorage.setItem("token", response.data.token);
+        navigate("/");
+      } 
     } catch (error:any) {
       console.log(error);
       setBackMessage(error.response.data.message);
