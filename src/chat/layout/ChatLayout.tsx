@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SideBar } from "../components/SideBar";
 import { Header } from "../components/Header";
 import { ChatBubble } from "../components/ChatBubble";
@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Paperclip } from "lucide-react";
+import customAxios from "@/utils/customAxios";
 
 export const ChatLayout = () => {
   const [selectedChatId, setSelectedChatId] = useState<number | null>(1);
@@ -19,6 +20,18 @@ export const ChatLayout = () => {
   };
 
   const selectedChat = chats.find((chat) => chat.id === selectedChatId);
+
+  const getChats = async () => {
+   try {
+    console.log("Fetching data...");
+     } catch (error) {
+    console.error(error);
+   }
+  }
+
+  useEffect(()=>{
+    getChats()
+  },[])
 
   return (
     <div className="flex justify-center items-center p-10 h-screen antialiased text-foreground bg-customGray">

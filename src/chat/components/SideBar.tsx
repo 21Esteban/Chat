@@ -36,6 +36,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router";
+import customAxios from "@/utils/customAxios";
 
 interface Chat {
   id: number;
@@ -82,10 +83,14 @@ export const SideBar = () => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
+ async function createChat(values: z.infer<typeof formSchema>) {
     console.log(values);
+    try {
+      console.log(await customAxios.post("/chat")) 
+      
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   const [searchTerm, setSearchTerm] = useState("");
@@ -169,7 +174,7 @@ export const SideBar = () => {
             <AlertDialogDescription></AlertDialogDescription>
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit(onSubmit)}
+                onSubmit={form.handleSubmit(createChat)}
                 className="space-y-8"
               >
                 <FormField
@@ -194,7 +199,7 @@ export const SideBar = () => {
 
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction>Continue</AlertDialogAction>
+              <AlertDialogAction onClick={createChat}>Continue</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>
