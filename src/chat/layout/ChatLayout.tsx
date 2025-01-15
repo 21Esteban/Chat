@@ -8,7 +8,6 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Paperclip } from "lucide-react";
-import customAxios from "@/utils/customAxios";
 
 export const ChatLayout = () => {
   const [selectedChatId, setSelectedChatId] = useState<number | null>(1);

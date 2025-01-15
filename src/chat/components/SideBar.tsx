@@ -67,7 +67,7 @@ const mockChats: Chat[] = [
 ];
 
 const formSchema = z.object({
-  phoneNumber: z
+  phoneNumberContact: z
     .string()
     .min(10, { message: "Phone number must be at least 10 digits" })
     .max(10, { message: "Phone number cannot exceed 10 digits" }),
@@ -75,21 +75,27 @@ const formSchema = z.object({
 
 export const SideBar = () => {
   const navigate = useNavigate();
-
+  const [isLoading, setIsLoading] = useState(false);
+  const [backMessage, setBackMessage] = useState("");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      phoneNumber: "",
+      phoneNumberContact: "",
     },
   });
 
- async function createChat(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function createChat(values: z.infer<typeof formSchema>) {
     try {
-      console.log(await customAxios.post("/chat")) 
-      
+      setIsLoading(true);
+      const user = JSON.parse(localStorage.getItem("user") || '');
+      console.log({ ...values, phoneNumber: user.number ?? "" });
+      const backResponse = await customAxios.post("/chat", values);
+      setBackMessage(backResponse.data.message);
     } catch (error) {
-      console.log(error)
+      console.log(error);
+      setBackMessage(error.response.data.message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -111,10 +117,14 @@ export const SideBar = () => {
           <DropdownMenuContent>
             <DropdownMenuLabel>Options</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={()=>{
-              localStorage.removeItem("token")
-              navigate("auth/login")
-              }}>Sign out</DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => {
+                localStorage.removeItem("token");
+                navigate("auth/login");
+              }}
+            >
+              Sign out
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
@@ -179,7 +189,7 @@ export const SideBar = () => {
               >
                 <FormField
                   control={form.control}
-                  name="phoneNumber"
+                  name="phoneNumberContact"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>phone number</FormLabel>
@@ -196,10 +206,10 @@ export const SideBar = () => {
                 <Button type="submit">Submit</Button>
               </form>
             </Form>
-
+            {isLoading ? <p>Buscando Chat ...</p> : <p>{backMessage}</p>}
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={createChat}>Continue</AlertDialogAction>
+              <AlertDialogAction>Continue</AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

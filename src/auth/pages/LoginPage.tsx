@@ -35,12 +35,17 @@ export const LoginPage = () => {
   const sendForm = async (values: z.infer<typeof formSchema>) => {
     try {
       const response = await customAxios.post("/auth/signIn", values);
-      if(response.data.token){
-        localStorage.setItem("token", response.data.token);
+      const { data, token } = response.data;
+
+      if (data) {
+        localStorage.setItem("user", JSON.stringify(data));
+      }
+      if (token) {
+        localStorage.setItem("token", token);
         navigate("/");
-      } 
+      }
     } catch (error) {
-      console.log(error);
+      console.error("Error during sign-in:", error);
     }
   };
 
